@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="practice_task8_final.css">
+    <title>Practice_task8_final</title>
+</head>
+<body>
+<button class="sort" id="sort" onclick="sort1()">Sort</button>
+<button class="reset" id="reset" onclick="reset1()">Reset</button>
+<button class="rand" id="rand" onclick="rand()">Random Fill</button>
+<input type="text" class="quantity" id="quantity" placeholder="Quantity of fields">
+<button class="ok" id="ok" onclick="ok()">Ok</button>
+<script>
+    var body = document.getElementsByTagName("body")[0];
+
+    var myGlobalVariableToTrackLines = 0;
+    table = document.createElement("table");
+    body.appendChild(table);
+    table.style.borderCollapse = "separate";
+
+    function generateMyCellId(line, cell) {
+        return "line" + line +  "cell" + cell;
+    }
+
+    function createOneLine(myNumbers, bull) {
+        var tr = document.createElement("tr");
+        table.appendChild(tr);
+
+        for(var i = 0; i < document.getElementById("quantity").value; i++) {
+            var td = document.createElement("td");
+            tr.appendChild(td);
+            var input = document.createElement("INPUT");
+            input.setAttribute("type", "text");
+            input.setAttribute("class", "num");
+            input.setAttribute("id", generateMyCellId(myGlobalVariableToTrackLines, i) );
+            td.appendChild(input);
+            if(myNumbers && myNumbers.length && myNumbers.length >= i){
+                input.value = myNumbers[i];
+            }
+            if(bull === true){
+                document.getElementById(generateMyCellId(myGlobalVariableToTrackLines, i)).disabled = true;
+            }
+
+        }
+        ++myGlobalVariableToTrackLines;
+    }
+
+
+
+    function sort1() {
+        var a = 0;
+        var nums = [];
+        for (var j = 0; j < document.getElementById("quantity").value; j++) {
+            nums[j] = parseInt(document.getElementById(generateMyCellId(0, j)).value.split(","));
+        }
+
+        for (var k = 0; k < nums.length; k++) {
+            for (var p = 0; p < nums.length - k - 1; p++) {
+
+                if (nums[p] > nums[p + 1]) {
+                    var variable = nums[p];
+                    nums[p] = nums[p + 1];
+                    nums[p + 1] = variable;
+
+                    createOneLine(nums, true);
+                    a += 1;
+                    if(document.getElementById(generateMyCellId(0, p)).value !== nums[p]){
+                        document.getElementById(generateMyCellId(a, p)).style.background = "red";
+                        document.getElementById(generateMyCellId(a, p+1)).style.background = "pink";
+                    }
+                }
+            }
+        }
+    }
+
+    function reset1() {
+        var buts = document.getElementsByTagName("tr");
+        for (var g = 1; g < buts.length; g++) {
+            for (var p = 0; p < document.getElementById("quantity").value; p++) {
+                document.getElementById(generateMyCellId(0, p)).value = "";
+                document.getElementById(generateMyCellId(g, p)).style.display = "none";
+            }
+        }
+    }
+
+    function rand(){
+        for (var p = 0; p < document.getElementById("quantity").value; p++) {
+            var rand = Math.floor(Math.random() * 10);
+            document.getElementById(generateMyCellId(0, p)).value = rand;
+        }
+    }
+
+    function ok(){
+        if(parseInt(document.getElementById("quantity").value) > 8){
+            document.getElementById("quantity").value = "";
+        }else if(parseInt(document.getElementById("quantity").value) < 3){
+            document.getElementById("quantity").value = "";
+        }else {
+            createOneLine();
+        }
+    }
+</script>
+</body>
+</html>
